@@ -8,7 +8,7 @@ public class principal {
 		// TODO Auto-generated method stub
 		//Jugador j=new Jugador();
 		//j.solicitarNombre();
-		ventanaJuego vj=new ventanaJuego();
+		VentanaJuego vj=new VentanaJuego();
 		vj.setVisible(true);
 
 	}

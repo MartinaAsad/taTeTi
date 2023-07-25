@@ -11,35 +11,47 @@ import javax.swing.JOptionPane;
 
 import java.awt.Color;
 import java.awt.Font;
-import javax.swing.JRadioButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import Logica.Jugador;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class ventanaJuego extends JFrame {
+public class VentanaJuego extends JFrame {
 
+	//MEJORAR: METODO COMPROBAR GANADOR PARA QUE NO APAREZCAN 2 GANADORES AL MISMO TIEMPO Y QUE AL SER ASI | CON X NO
+	//HAGO EXACTAMENTE LO MISMO CON LA O Y QUE LA DECLARAR A UNO GANADOR SE DESHABILITE PARA APRETAR CASILLEROS Y CHEQUEAR
+	//LO QUE PASO CUANDO GANA O
 	private JPanel contentPane;
-	private boolean turno=true;//si es true va el usuario
 	private JLabel posicionesTablero []=new JLabel[9];
 	private ButtonGroup xo=new ButtonGroup();
 	String [] opciones={"X" , "O"};
+	 int posicionesGanadoras[][]= {
+			 {0,1,2},	 				//horizontales
+			 {3,4,5},
+			 {6,7,8},
+			 {0,3,6},					//verticales
+			 {1,4,7},
+			 {2,5,8},
+			 {0,4,8},
+			 {2, 4, 6}
+	 };
 
 	
 
 	/**
 	 * Create the frame.
 	 */
-	String n=JOptionPane.showInputDialog(null, "Escribe tu nombre: ");//aca se le pide al usuario su nombre
+	/*String n=JOptionPane.showInputDialog(null, "Escribe tu nombre: ");//aca se le pide al usuario su nombre*/
 	int opcionSeleccionada = JOptionPane.showOptionDialog(null, "Seleccione su ficha",null,JOptionPane.DEFAULT_OPTION,
 			JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
-	public ventanaJuego() {
+	private JTextField txtGanador;
+	public VentanaJuego() {
 		setTitle("TateTi");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 574, 423);
+		setBounds(100, 100, 467, 384);
 		this.setLocationRelativeTo(null);//aparece en el medio
-		
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -52,27 +64,13 @@ public class ventanaJuego extends JFrame {
 		contentPane.add(tablero);
 		tablero.setBackground(new Color(128, 128, 255));
 		tablero.setLayout(null);
-		
-		JLabel subtitulo = new JLabel("Usuario");
-		subtitulo.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		subtitulo.setBounds(405, 112, 92, 35);
-		contentPane.add(subtitulo);
-		
-		
-		JLabel nombreUsuario = new JLabel("");//aca se ve el nombre que el usuario coloco
-		nombreUsuario.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		nombreUsuario.setOpaque(true);
-		nombreUsuario.setBackground(new Color(255, 255, 255));
-		nombreUsuario.setBounds(405, 171, 123, 20);
-		nombreUsuario.setText(n);
-		contentPane.add(nombreUsuario);
 		JLabel posicion1 = new JLabel("");
 		posicion1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				//funcion para que al seleccionar x y apretar un casillero, este se cambie
-				//optimizarlo en el futuro
 				seleccionar(0);
+				juegoMaquina();
+				comprobarGanador();
 			}	
 		});
 		posicion1.setOpaque(true);//permitir que cambie el color de fondo
@@ -87,6 +85,8 @@ public class ventanaJuego extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				seleccionar(1);
+				juegoMaquina();
+				comprobarGanador();
 				
 			}
 		});
@@ -97,11 +97,13 @@ public class ventanaJuego extends JFrame {
 		posicion2.setBounds(0, 76, 106, 61);
 		tablero.add(posicion2);
 		
-		JLabel posicion3 = new JLabel("");
+		JLabel posicion3 = new JLabel();
 		posicion3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				seleccionar(2);
+				juegoMaquina();
+				comprobarGanador();
 			}
 		});
 		posicion3.setOpaque(true);
@@ -116,6 +118,8 @@ public class ventanaJuego extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				seleccionar(3);
+				juegoMaquina();
+				comprobarGanador();
 			}
 		});
 		posicion4.setOpaque(true);
@@ -130,6 +134,8 @@ public class ventanaJuego extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				seleccionar(4);
+				juegoMaquina();
+				comprobarGanador();
 			}
 		});
 		posicion5.setOpaque(true);
@@ -144,6 +150,8 @@ public class ventanaJuego extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				seleccionar(5);
+				juegoMaquina();
+				comprobarGanador();
 			}
 		});
 		posicion6.setOpaque(true);
@@ -158,6 +166,8 @@ public class ventanaJuego extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				seleccionar(6);
+				juegoMaquina();
+				comprobarGanador();
 			}
 		});
 		posicion7.setOpaque(true);
@@ -172,6 +182,8 @@ public class ventanaJuego extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				seleccionar(7);
+				juegoMaquina();
+				comprobarGanador();
 			}
 		});
 		posicion8.setOpaque(true);
@@ -187,6 +199,8 @@ public class ventanaJuego extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				seleccionar(8);
+				juegoMaquina();
+				comprobarGanador();
 			}
 		});
 		posicion9.setOpaque(true);
@@ -204,21 +218,82 @@ public class ventanaJuego extends JFrame {
 		posicionesTablero[5]=posicion6;
 		posicionesTablero[6]=posicion7;
 		posicionesTablero[7]=posicion8;
-		posicionesTablero[8]=posicion9;
+		posicionesTablero[8]=posicion9;	
 		
-		
-		 
-		
-		
-		
+		JButton btnNewButton = new JButton("Reiniciar ");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for(int i=0;i<posicionesTablero.length;i++) {
+					posicionesTablero[i].setText("");
+					posicionesTablero[i].setBackground(Color.WHITE);
+				}
+				opcionSeleccionada = JOptionPane.showOptionDialog(null, "Seleccione su ficha",null,JOptionPane.DEFAULT_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
+			}
+		});
+		btnNewButton.setBackground(new Color(192, 192, 192));
+		btnNewButton.setBounds(260, 25, 89, 23);
+		contentPane.add(btnNewButton);
 	}
-	
 	
 	public void seleccionar(int posicion) {
 		if(posicionesTablero[posicion].getText().isEmpty()&& opcionSeleccionada==0) {
 			posicionesTablero[posicion].setText("X");
+			
 		}else if(posicionesTablero[posicion].getText().isEmpty()&& opcionSeleccionada==1){
 			posicionesTablero[posicion].setText("O");
+		}
+	}
+	
+	public void juegoMaquina() {
+		int posicionVacia=0;//aca se captura una posicion dentro del tablero que este vacia
+		for(int i=0;i<posicionesTablero.length;i++) {
+			if(posicionesTablero[i].getText().isEmpty()) {//aca se pregunta cual posicion esta vacia
+				posicionVacia=i;
+			}
+		}
+		//System.out.println(posicionVacia);
+		if(posicionesTablero[posicionVacia].getText().isEmpty()&& opcionSeleccionada==0) {
+			posicionesTablero[posicionVacia].setText("O");//aca se setea o en la posicion vacia cuando el usuario selecciona X
+		}else if(posicionesTablero[posicionVacia].getText().isEmpty()&& opcionSeleccionada==1) {
+			posicionesTablero[posicionVacia].setText("X");//aca se setea x en la posicion vacia cuando el usuario selecciona o
+		}
+	}
+	
+	public void comprobarGanador() {
+		//texto que muestra quien gano
+		txtGanador = new JTextField();
+		txtGanador.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtGanador.setBounds(209, 314, 210, 31);
+		txtGanador.setBackground(new Color(240, 240, 240));
+		contentPane.add(txtGanador);
+		txtGanador.setColumns(10);
+		
+		String opcionUsuario=Integer.toString(opcionSeleccionada);
+		String opcionGanadora="";
+		
+		for(int i=0;i<posicionesGanadoras.length;i++) {
+			if(posicionesTablero[posicionesGanadoras[i][0]].getText().equals(opciones[0])
+					&& posicionesTablero[posicionesGanadoras[i][1]].getText().equals(opciones[0]) &&
+					posicionesTablero[posicionesGanadoras[i][2]].getText().equals(opciones[0])) {//si la opcion ganadora es X
+			System.out.println(opcionGanadora=posicionesTablero[posicionesGanadoras[i][2]].getText());
+				posicionesTablero[posicionesGanadoras[i][0]].setBackground(Color.GREEN);//se colorea la linea ganadora de verde
+				posicionesTablero[posicionesGanadoras[i][1]].setBackground(Color.GREEN);
+				posicionesTablero[posicionesGanadoras[i][2]].setBackground(Color.GREEN);
+				
+				txtGanador.setText("Gano la opcion X");
+				
+				
+			}else if(posicionesTablero[posicionesGanadoras[i][0]].getText().equals(opciones[1])
+					&& posicionesTablero[posicionesGanadoras[i][1]].getText().equals(opciones[1]) &&
+					posicionesTablero[posicionesGanadoras[i][2]].getText().equals(opciones[1])) {//si lsa opcion ganadora es O
+				
+				posicionesTablero[posicionesGanadoras[i][0]].setBackground(Color.RED);//se colorea la linea ganadora de rojo 
+				posicionesTablero[posicionesGanadoras[i][1]].setBackground(Color.RED);
+				posicionesTablero[posicionesGanadoras[i][2]].setBackground(Color.RED);
+				
+				txtGanador.setText("Gano la opcion O");
+			}
 		}
 	}
 	/**
@@ -228,7 +303,7 @@ public class ventanaJuego extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ventanaJuego frame = new ventanaJuego();
+					VentanaJuego frame = new VentanaJuego();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
